@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Will You Be My Valentine? 💖</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 32px;
+            color: #e91e63;
+        }
+
+        img {
+            width: 300px;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .buttons {
+            position: relative;
+            height: 80px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+            margin-right: 20px;
+        }
+
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
+        }
+
+        .message {
+            display: none;
+            font-size: 26px;
+            color: #ff4081;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" src="bg-music.mp3" loop preload="auto"></audio>
+
+
+<div class="container">
+
+    <!-- QUIZ SECTION -->
+    <div id="quiz">
+        <h1 id="quizQuestion"></h1>
+        <div class="buttons" id="quizOptions"></div>
+    </div>
+
+    <!-- FINAL VALENTINE SECTION (YOUR ORIGINAL CONTENT) -->
+    <div id="final" style="display:none;">
+        <h1 id="question">Will you be my Valentine? 💘</h1>
+
+        <img id="mainImage" src="main.jpg" alt="Valentine Image">
+
+        <div class="buttons" id="buttons">
+            <button id="yesBtn">Yes 💖</button>
+            <button id="noBtn">No 🙄</button>
+        </div>
+
+        <div class="message" id="message">
+            Hehe 😌 I knew it mera chiku miku tiku!  
+            <br>You just made my heart do bhangra 💃🕺
+        </div>
+    </div>
+</div>
+
+<script>
+/* ======================
+   QUIZ DATA
+====================== */
+const bgMusic = document.getElementById("bgMusic");
+
+
+let musicStarted = false;
+
+function startMusicOnce() {
+    if (!musicStarted) {
+        bgMusic.volume = 0.5;
+        bgMusic.play()
+            .then(() => {
+                musicStarted = true;
+                console.log("Music started");
+            })
+            .catch(err => console.log("Autoplay blocked:", err));
+    }
+}
+
+// Start music on ANY user interaction
+document.addEventListener("click", startMusicOnce);
+document.addEventListener("touchstart", startMusicOnce);
+document.addEventListener("keydown", startMusicOnce);
+
+
+const questions = [
+    {
+        q: "Who is the cutest human alive?",
+        options: ["Me", "Obviously me", "Aman obv", "Fine… stichy 🙄"],
+        correct: 2
+    },
+    {
+        q: "Who overthinks the most?",
+        options: ["You", "Me", "Aman is sane", "Aman 24x7 😭"],
+        correct: 3
+    },
+    {
+        q: "Who is secretly obsessed with you?",
+        options: ["You", "Me but I'm mental", "Aman pretending not to", "Aman dangerously 😌"],
+        correct: 1
+    },
+    {
+        q: "Who would lose an argument but still think they won?",
+        options: ["Aman", "Me", "Me but aman is right always", "Aman 100%"],
+        correct: 2
+    },
+    {
+        q: "Who needs hugs the most?",
+        options: ["You", "Me im a baby", "Aman but won’t ask", "Aman always 🥺"],
+        correct: 1
+    },
+    {
+        q: "Who gets dramatic for no reason?",
+        options: ["You", "Me", "Me Oscar worthy", "Aman daily 🎭"],
+        correct: 2
+    },
+    {
+        q: "Who would cry if phone battery hits 5%?",
+        options: ["You", "Me", "Aman internally", "Aman immediately 😭"],
+        correct: 1
+    },
+    {
+        q: "Who is always right?",
+        options: ["You", "Me", "Aman even when wrong", "Aman obviously 😌"],
+        correct: 1
+    },
+    {
+        q: "Who is the main character?",
+        options: ["You", "Me", "Aman in every universe", "Aman fr 💅"],
+        correct: 1
+    },
+    {
+        q: "Final test: Who loves you more?",
+        options: ["You", "Me", "Aman a little", "Aman way too much ❤️"],
+        correct: 3
+    }
+];
+
+let currentQuestion = 0;
+
+/* ======================
+   QUIZ LOGIC
+====================== */
+
+const quiz = document.getElementById("quiz");
+const quizQuestion = document.getElementById("quizQuestion");
+const quizOptions = document.getElementById("quizOptions");
+const finalPage = document.getElementById("final");
+
+function loadQuestion() {
+    quizQuestion.innerText = `Q${currentQuestion + 1}. ${questions[currentQuestion].q}`;
+    quizOptions.innerHTML = "";
+
+    questions[currentQuestion].options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(index);
+        quizOptions.appendChild(btn);
+    });
+}
+
+function checkAnswer(index) {
+    if (index === questions[currentQuestion].correct) {
+        currentQuestion++;
+        if (currentQuestion === questions.length) {
+            quiz.style.display = "none";
+            finalPage.style.display = "block";
+        } else {
+            loadQuestion();
+        }
+    } else {
+        alert("Wrong 😈 Start again from Question 1!");
+        currentQuestion = 0;
+        loadQuestion();
+    }
+}
+
+loadQuestion();
+
+/* ======================
+   YOUR ORIGINAL VALENTINE LOGIC
+====================== */
+
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const message = document.getElementById("message");
+const buttons = document.getElementById("buttons");
+const image = document.getElementById("mainImage");
+const question = document.getElementById("question");
+
+const originalImage = "main.jpg";
+const noHoverImage = "no-hover.jpg";
+
+function moveNoButton() {
+    const x = Math.random() * 250 - 125;
+    const y = Math.random() * 80 - 40;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+noBtn.addEventListener("mouseover", () => {
+    moveNoButton();
+    image.src = noHoverImage;
+});
+
+noBtn.addEventListener("mouseout", () => {
+    image.src = originalImage;
+});
+
+noBtn.addEventListener("click", () => {
+    moveNoButton();
+    image.src = noHoverImage;
+    setTimeout(() => {
+        image.src = originalImage;
+    }, 500);
+});
+
+yesBtn.addEventListener("click", () => {
+    image.src = "success.jpg";
+    buttons.style.display = "none";
+    question.innerText = "YAYYYYY!!! 💕🎉";
+    message.style.display = "block";
+});
+</script>
+
+</body>
+
+</html>
